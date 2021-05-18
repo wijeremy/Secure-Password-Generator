@@ -112,7 +112,7 @@ Simple, right?
 
 This took me an entire night to work out. In hindsight it seems straight forward. But wrapping my mind around anywhere from 80 to 12,160 loops, and what should be done at any moment, finding key moments to maybe pivot and do something else, it was just way over my head at first. The paradigm shift happend for me the following morning when I came up with the isGood array. This allowed me to pass a true value into a new array at index i if a character from the array at char[i] was ever in myPassword. What's more, I could pass true multiple times and not affect my outcome. 
 
-Finally, I can loop through isGood and, if any value is false -- meaning the character set at char[i] was not used, I could reset myPassword, loop through isGood to set all its values to false, and start over from the top of getPassword.
+Finally, I can loop through isGood and, if any value is false -- meaning the array of characters at char[i] was not used, I could reset myPassword, loop through isGood to set all its values to false, and start over from the top of getPassword.
 
 This way, we ensure that every chosen character type is used.
 
