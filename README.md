@@ -1,92 +1,125 @@
-# 03 JavaScript: Password Generator
+# Secure Password Generator
 
-## Your Task
+[Click here](https://wijeremy.github.io/Secure-Password-Generator/) to be taken to the Secure Password Generator website.
+## Introduction
+I was tasked with writing Java Script for a website that would generate a random password with attributes chosen by the user. I was asked to prompt the user for these attributes using pop up windows. The password that is generated could either be displayed in a following pop up or in a text box on the original website. The html and css were provided, as well as some Java Script to get me started:
 
-This week’s homework requires you to modify starter code to create an application that enables employees to generate random passwords based on criteria that they’ve selected. This app will run in the browser and will feature dynamically updated HTML and CSS powered by JavaScript code that you write. It will have a clean and polished, responsive user interface that adapts to multiple screen sizes.
+This is what the website looks like, with html and css provided:
 
-The password can include special characters. If you’re unfamiliar with these, see this [list of password special characters](https://www.owasp.org/index.php/Password_special_characters) from the OWASP Foundation.
+![A picture of the website](./Assets/photos/site1.png)
 
-## User Story
+And this is the Java Script I was provided:
+```javascript
+// Assignment Code
+var generateBtn = document.querySelector("#generate");
 
-```
-AS AN employee with access to sensitive data
-I WANT to randomly generate a password that meets certain criteria
-SO THAT I can create a strong password that provides greater security
-```
+// Write password to the #password input
+function writePassword() {
+  var password = generatePassword();
+  var passwordText = document.querySelector("#password");
 
-## Acceptance Criteria
+  passwordText.value = password;
+}
 
-```
-GIVEN I need a new, secure password
-WHEN I click the button to generate a password
-THEN I am presented with a series of prompts for password criteria
-WHEN prompted for password criteria
-THEN I select which criteria to include in the password
-WHEN prompted for the length of the password
-THEN I choose a length of at least 8 characters and no more than 128 characters
-WHEN prompted for character types to include in the password
-THEN I choose lowercase, uppercase, numeric, and/or special characters
-WHEN I answer each prompt
-THEN my input should be validated and at least one character type should be selected
-WHEN all prompts are answered
-THEN a password is generated that matches the selected criteria
-WHEN the password is generated
-THEN the password is either displayed in an alert or written to the page
+// Add event listener to generate button
+generateBtn.addEventListener("click", writePassword);
 ```
 
-## Mock-Up
+In short I was given the following To Do list:
+  * Pop up windows will ask for
+    * How long the user wants the password to be (8 <= characters <= 128)
+    * Which characters the user would like from a list of
+      * Upper case letters
+      * Lower case letters
+      * Numbers
+      * Special Characters
+  * Generate a password with the chosen criteria
+  * Display that password to the user
 
-The following image shows the web application's appearance and functionality:
+But to get started, I create a function named generatePassword() to pass into the variable password. What follows is inside that function.
+## User Prompts
+This part was rather straight forward. I first want to use the prompt function to ask for a number between 8 and 128 (inlcusive). To make sure the input is what I want, I pass it through the following if statement:
 
-![The Password Generator application displays a red button to "Generate Password".](./Assets/03-javascript-homework-demo.png)
+```javascript
+  if (ammount == null || ammount<8 || ammount>128 || isNaN(ammount)) {
+    window.alert("Sorry, invalid response. Try again.");
+    return
+  }
+```
 
-## Grading Requirements
+This tells our generatePassword() function to alert the user and pass an empty result if they hit cancel, input a number less than 8 or more than 128, or input something that wasn't a number.
 
-This homework is graded based on the following criteria: 
+Then I want to use the confirm function to ask which character types the user wants. I also need them to select at least one character type, so I use a similar if statement as above, but for if the user hit cancel on each confirm window.
 
-### Technical Acceptance Criteria: 40%
+All in all, the following pop ups could be displayed:
 
-* Satisfies all of the preceding acceptance criteria plus the following:
+Asking the user how many characters they want included:
+![how many characters do you want](./Assets/photos/howMany.png)
 
-  * The homework should not produce any errors in the console when you inspect it using Chrome DevTools.
+...
 
-### Deployment: 32%
+Alerting the user they need to input a valid value:
 
-* Application deployed at live URL.
+![give me a number](./Assets/photos/error1.png)
 
-* Application loads with no errors.
+(note: after this window, the function stops and the user must start again)
 
-* Application GitHub URL submitted.
+...
 
-* GitHub repository that contains application code.
+Asking the user which characters they want included:
 
-### Application Quality: 15%
+![upper](./Assets/photos/upper.png)
 
-* Application user experience is intuitive and easy to navigate.
+etc.
 
-* Application user interface style is clean and polished.
+...
 
-* Application resembles the mock-up functionality provided in the homework instructions.
+Alerting the user that they need to select at least one character type:
 
-### Repository Quality: 13%
+![pick one](./Assets/photos/error2.png)
 
-* Repository has a unique name.
+(note: like previously, this stops the function and the user must start again)
 
-* Repository follows best practices for file structure and naming conventions.
+## Generating the Password
+The user has now told us everything we need to know, and now we need to give them what they asked for. The first thing to do is make a bank of the characters we could put in a password. I made an array for each character type, but I'm sure there was an easier way to do this. Ultimately this made things pretty complicated, but at least I think I understand everything I wrote instead of copy and pasting from the internet (though I really tried to get that to work; this just got too dense too quickly). 
 
-* Repository follows best practices for class/id naming conventions, indentation, quality comments, etc.
+Then, once I have my character arrays built, I check each character type input from the user and, if they wanted it, I push its array into another array, char.
 
-* Repository contains multiple descriptive commit messages.
+Now I have an array, char, which contains all the character types the user is happy including. I then choose a random array from char, and then a random character from that array. I then push that character into another array, myPassword. I then repeat this process, using a for loop, a number of times equal to the password length chosen by the user.
 
-* Repository contains quality readme file with description, screenshot, and link to deployed application.
+Ultimately I will have an array, myPassword, with a length chosen by the user. It will only contain characters from the character type(s) chosen by the user. With this process, there is also an equal likelyhood any character type will be included, despite some types being much larger than others. 
 
-## Review
+At this point, one could make the argument that the assignment is completed. However, I was unhappy with the possibility that not ALL of the character types chosen by the user would be included. 
 
-You are required to submit the following for review:
+## Checking the Password
+I would like to direct your attention to this bit of Java Script:
 
-* The URL of the deployed application.
+```javascript
+for (var i = 0; i < char.length; i++) {
+  for (var j = 0; j < char[i].length; j++) {
+    for (var k = 0; k < myPassword.length; k++ ) {
+      if (char[i][j] == myPassword[k]) {
+        isGood[i] = true;
+      };
+    };
+  }; 
+};
+```
 
-* The URL of the GitHub repository, with a unique name and a readme describing the project.
+Now, it's important to note, that while we were pushing the chosen character types into char, we were also pushing the value "false" into another array, isGood. This ensured that there were as many values in in isGood as there were in char. 
 
-- - -
-© 2021 Trilogy Education Services, LLC, a 2U, Inc. brand. Confidential and Proprietary. All Rights Reserved.
+Simple, right?
+
+This took me an entire night to work out. In hindsight it seems straight forward. But wrapping my mind around anywhere from 80 to 12,160 loops, and what should be done at any moment, finding key moments to maybe pivot and do something else, it was just way over my head at first. The paradigm shift happend for me the following morning when I came up with the isGood array. This allowed me to pass a true value into a new array at index i if a character from the array at char[i] was ever in myPassword. What's more, I could pass true multiple times and not affect my outcome. 
+
+Finally, I can loop through isGood and, if any value is false -- meaning the character set at char[i] was not used, I could reset myPassword, loop through isGood to set all its values to false, and start over from the top of getPassword.
+
+This way, we ensure that every chosen character type is used.
+
+## Display the Password
+This was actually handled in the code that was proveded to me. If the password is returned in generatePassword(), then it is displayed in the text box on the website. The only trick was to return the array myPassword as a string without any unwanted commas. This was handled with 
+```javascript
+.join("")
+```
+
+![a picture of the working website](./Assets/photos/site2.png)
